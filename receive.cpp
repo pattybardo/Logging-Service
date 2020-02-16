@@ -6,7 +6,11 @@
 
 #include "info.hpp"
 
+#define MESSAGE_COUNT 100
+
 using namespace boost::interprocess;
+
+
 
 int main ()
 {
@@ -17,22 +21,30 @@ int main ()
              open_only,
              "mq"
             );
-        message_queue::size_type recvd_size;
-        unsigned int priority;
 
-        info me;
 
-        std::stringstream iss;
-        std::string serialized_string;
-        serialized_string.resize(MAX_SIZE);
-        mq.receive(&serialized_string[0], MAX_SIZE, recvd_size, priority);
-        iss << serialized_string;
+        for (int i=0; i<MESSAGE_COUNT; ++i){
+          message_queue::size_type recvd_size;
+          unsigned int priority;
 
-        boost::archive::text_iarchive ia(iss);
-        ia >> me;
+          info me;
 
-        std::cout << me.id << std::endl;
-        std::cout << me.name << std::endl;
+          std::stringstream iss;
+          std::string serialized_string;
+          serialized_string.resize(MAX_SIZE);
+
+          while (!mq.try_receive(&serialized_string[0], MAX_SIZE, recvd_size, priority)){
+            usleep(0);
+          }
+          //mq.try_receive(&serialized_string[0], MAX_SIZE, recvd_size, priority);
+          iss << serialized_string;
+
+          boost::archive::text_iarchive ia(iss);
+          ia >> me;
+
+          std::cout << me.id << " : " << me.name << std::endl;
+        }
+
     }
     catch(interprocess_exception &ex)
     {

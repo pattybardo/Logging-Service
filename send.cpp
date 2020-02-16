@@ -21,17 +21,20 @@ int main ()
              MAX_SIZE
             );
 
-        
+        for (int i = 0; i < 10; ++i){
+          info me(getpid(), "cool");
 
-        info me(1, "asdfsdasdas");
+          std::stringstream oss;
 
-        std::stringstream oss;
+          boost::archive::text_oarchive oa(oss);
+          oa << me;
 
-        boost::archive::text_oarchive oa(oss);
-        oa << me;
+          std::string serialized_string(oss.str());
+          mq.send(serialized_string.data(), serialized_string.size(), 0);
+          std::cout << me.id << " : " << me.name << std::endl;
+        }
 
-        std::string serialized_string(oss.str());
-        mq.send(serialized_string.data(), serialized_string.size(), 0);
+
 
         std::cout << "Here" << '\n';
     }
