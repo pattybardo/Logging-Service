@@ -21,8 +21,16 @@ int main ()
              MAX_SIZE
             );
 
-        for (int i = 0; i < 10; ++i){
-          info me(getpid(), "cool");
+        std::string message;
+
+        while (true){
+          getline(std::cin, message);
+
+          if (message == ""){
+            break;
+          }
+
+          info me(getpid(), message);
 
           std::stringstream oss;
 
@@ -31,8 +39,9 @@ int main ()
 
           std::string serialized_string(oss.str());
           mq.send(serialized_string.data(), serialized_string.size(), 0);
-          std::cout << me.id << " : " << me.name << std::endl;
+          //std::cout << me.id << " : " << me.name << std::endl;
         }
+
 
 
 

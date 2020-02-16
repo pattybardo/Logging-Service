@@ -1,6 +1,6 @@
 #include <boost/serialization/string.hpp>
 
-#define MAX_SIZE 1000
+#define MAX_SIZE 10000
 
 class info
 {
