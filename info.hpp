@@ -9,9 +9,18 @@ class info
             : action(x), clientId(i), logLevel(l), message(n)
         {};
 
+        // Action can either be 0, 1, or 2 (log, dump, clean)
         unsigned int action;
+
+        // ClientId is currently the process ID
         std::string clientId;
+
+        // The log level will specify what the level of the log is (0 - info,
+        // 1 - warning, 2 - error). The default is -1 for actions that do not
+        // include a log level
         int logLevel;
+
+        // The message included in a log
         std::string message;
 
     private:

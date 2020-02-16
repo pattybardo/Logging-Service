@@ -20,14 +20,24 @@ int main ()
         );
 
         std::string message;
+        unsigned int action = 0;
+        int logLevel;
+        std::string clientId = std::to_string(getpid());
 
         while (true){
           getline(std::cin, message);
           if (message == ""){
             break;
+          } else if (message == "dump"){
+            message = "";
+            action = 1;
+            logLevel = -1;
+          } else {
+            logLevel = 0;
+            action = 0;
           }
 
-          info me(0,std::to_string(getpid()), 0, message);
+          info me(action, clientId, logLevel, message);
 
           std::stringstream oss;
           boost::archive::text_oarchive oa(oss);
