@@ -14,18 +14,15 @@ int main ()
     try
     {
         message_queue mq
-            (
-             open_or_create,
-             "mq",
-             100,
-             MAX_SIZE
-            );
+        (
+           open_only,
+           "mq"
+        );
 
         std::string message;
 
         while (true){
           getline(std::cin, message);
-
           if (message == ""){
             break;
           }
@@ -33,19 +30,17 @@ int main ()
           info me(getpid(), message);
 
           std::stringstream oss;
-
           boost::archive::text_oarchive oa(oss);
           oa << me;
 
           std::string serialized_string(oss.str());
-          mq.send(serialized_string.data(), serialized_string.size(), 0);
+          while(!mq.try_send(serialized_string.data(), serialized_string.size(), 0)){
+            usleep(0);
+          }
+          std::cout << "Message sent" << '\n';
           //std::cout << me.id << " : " << me.name << std::endl;
         }
 
-
-
-
-        std::cout << "Here" << '\n';
     }
     catch(interprocess_exception &ex)
     {
