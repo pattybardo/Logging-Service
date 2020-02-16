@@ -25,11 +25,13 @@ int main ()
            MAX_SIZE
         );
 
+        info me [MESSAGE_COUNT];
+
         for (int i=0; i<MESSAGE_COUNT; ++i){
           message_queue::size_type recvd_size;
           unsigned int priority;
 
-          info me;
+
 
           std::stringstream iss;
           std::string serialized_string;
@@ -43,12 +45,12 @@ int main ()
           iss << serialized_string;
 
           boost::archive::text_iarchive ia(iss);
-          ia >> me;
+          ia >> me[i];
 
           // TODO: Change the storage of all the messages to a buffer of messages
           // This buffer will hold all of the logs, and mayb as well design it to be
           // circular from the beginning
-          std::cout << me.id << " : " << me.name << std::endl;
+          std::cout << me[i].clientId << " : " << me[i].message << std::endl;
         }
 
     }

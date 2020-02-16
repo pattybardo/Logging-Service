@@ -5,12 +5,14 @@
 class info
 {
     public:
-        info (int i = 0, std::string n = "")
-            : id(i), name(n)
+        info (unsigned int x = 0, std::string i = std::to_string(getpid()), int l = -1, std::string n = "")
+            : action(x), clientId(i), logLevel(l), message(n)
         {};
 
-        int id;
-        std::string name;
+        unsigned int action;
+        std::string clientId;
+        int logLevel;
+        std::string message;
 
     private:
         friend class boost::serialization::access;
@@ -18,7 +20,9 @@ class info
         template<class Archive>
             void serialize(Archive & ar, const unsigned int version)
             {
-                ar & id;
-                ar & name;
+                ar & action;
+                ar & clientId;
+                ar & logLevel;
+                ar & message;
             }
 };

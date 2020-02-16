@@ -27,7 +27,7 @@ int main ()
             break;
           }
 
-          info me(getpid(), message);
+          info me(0,std::to_string(getpid()), 0, message);
 
           std::stringstream oss;
           boost::archive::text_oarchive oa(oss);
