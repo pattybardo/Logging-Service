@@ -13,6 +13,7 @@ class Log
     std::string getCurrentTime();
     std::string getClientId();
     int getLogLevel();
+    std::string getLogLevelPrint();
     std::string getMessage();
 
 

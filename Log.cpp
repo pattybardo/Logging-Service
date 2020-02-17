@@ -54,6 +54,19 @@ int Log::getLogLevel()
   return logLevel;
 }
 
+std::string Log::getLogLevelPrint()
+{
+  if (logLevel == 0){
+    return "[info]";
+  } else if (logLevel == 1) {
+    return "[warning]";
+  } else if (logLevel == 2) {
+    return "[error]";
+  } else {
+    return "[-------default value, should not be showing up------]";
+  }
+}
+
 std::string Log::getMessage()
 {
   return message;

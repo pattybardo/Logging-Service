@@ -51,6 +51,9 @@ int main ()
             usleep(0);
           }
           std::cout << "Message sent" << '\n';
+          if (message == "exit()"){
+            break;
+          }
           //std::cout << me.id << " : " << me.name << std::endl;
         }
 

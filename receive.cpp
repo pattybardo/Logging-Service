@@ -8,7 +8,7 @@
 #include "info.hpp"
 #include "Log.hpp"
 
-#define MESSAGE_COUNT 20
+#define BUFFER_SIZE 5
 
 using namespace boost::interprocess;
 
@@ -37,9 +37,10 @@ int main ()
         );
 
         info me;
-        Log logs [MESSAGE_COUNT];
+        Log logs [BUFFER_SIZE];
+        int i = 0;
 
-        for (int i=0; i<MESSAGE_COUNT; ++i){
+        while (true){
           message_queue::size_type recvd_size;
           unsigned int priority;
 
@@ -67,31 +68,25 @@ int main ()
           std::cout << "Test action value: " << me.action << '\n';
           if (me.action == 0) {
             //std::cout << "receiving log: " << me.message << '\n';
-            logs[i].setLog(me.clientId, me.logLevel, me.message);
-            // TODO: Change the storage of all the messages to a buffer of messages
-            // This buffer will hold all of the logs, and mayb as well design it to be
-            // circular from the beginning
+            logs[i%BUFFER_SIZE].setLog(me.clientId, me.logLevel, me.message);
+            ++i;
             //std::cout << me[i].clientId << " : " << me[i].message << std::endl;
           } else if (me.action == 1) {
             std::cout << "Starting dump" << '\n';
-            --i;
             //TODO: make a seperate function
-            for (int j=0; j < std::size(logs); ++j){
-              if (logs[j].getLogLevel() >= 0){
-                  std::cout <<  logs[j].getCurrentTime() << " "
-                  << logs[j].getLogLevel()<< " : "
-                  << logs[j].getMessage()
+            for (int j=i; j < std::size(logs)+i; ++j){
+              if (logs[j%BUFFER_SIZE].getLogLevel() >= 0){
+                  std::cout <<  logs[j%BUFFER_SIZE].getCurrentTime() << " "
+                  << logs[j%BUFFER_SIZE].getLogLevelPrint()<< " : "
+                  << logs[j%BUFFER_SIZE].getMessage()
                   << '\n';
               }
 
             }
           } else {
             std::cout << "Starting clear" << '\n';
-            //TODO: cleanup the --i and the for loop in general, could be a
-            // While loop
-            --i;
-            for (int j=0; j < std::size(logs); ++j){
-              logs[j].setLog();
+            for (int j=i; j < std::size(logs)+i; ++j){
+              logs[j%BUFFER_SIZE].setLog();
             }
           }
 
