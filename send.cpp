@@ -89,6 +89,18 @@ info receiveInfo(){
 
 }
 
+void sendMessage(info me, message_queue * mq)
+{
+  std::stringstream oss;
+  boost::archive::text_oarchive oa(oss);
+  oa << me;
+
+  std::string serialized_string(oss.str());
+  while(!mq->try_send(serialized_string.data(), serialized_string.size(), 0)){
+    usleep(0);
+  }
+}
+
 
 int main ()
 {
@@ -100,25 +112,14 @@ int main ()
            "mq"
         );
 
-        /*
-        std::string message;
-        unsigned int action = 0;
-        int logLevel;
-        std::string clientId = std::to_string(getpid());
-        */
-
         while (true){
+
           info me = receiveInfo();
+          sendMessage(me, &mq);
 
-          std::stringstream oss;
-          boost::archive::text_oarchive oa(oss);
-          oa << me;
-
-          std::string serialized_string(oss.str());
-          while(!mq.try_send(serialized_string.data(), serialized_string.size(), 0)){
-            usleep(0);
-          }
           std::cout << "Message sent" << '\n';
+
+          // This is here for testing, just to terminate the receive service
           if (me.message == "exit()"){
             break;
           }
