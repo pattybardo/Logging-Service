@@ -1,8 +1,15 @@
 #include "Log.hpp"
 #include <chrono>
 #include <ctime>
+#include <iostream>
 
-Log::Log(std::string clientId, int logLevel, std::string message)
+// TODO
+Log::Log()
+{
+  setLog("default", -1, "");
+}
+
+void Log::setLog(std::string pClientId, int pLogLevel, std::string pMessage)
 {
   time_t rawtime;
   struct tm * timeinfo;
@@ -14,9 +21,44 @@ Log::Log(std::string clientId, int logLevel, std::string message)
   strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M:%S",timeinfo);
   std::string str(buffer);
 
-  current_time = str;
 
-  clientId = clientId;
-  logLevel = logLevel;
-  message = message;
+  currentTime = str;
+  //std::cout << "setLog: " << currentTime << '\n';
+
+  clientId = pClientId;
+  logLevel = pLogLevel;
+  message = pMessage;
 }
+
+std::string Log::getCurrentTime()
+{
+  return currentTime;
+}
+
+std::string Log::getClientId()
+{
+  return clientId;
+}
+
+int Log::getLogLevel()
+{
+  return logLevel;
+}
+
+std::string Log::getMessage()
+{
+  return message;
+}
+
+
+/*
+std::ostream& operator<< (std::ostream &out, Log const &log) {
+    out << "[" << log.getCurrentTime() << "] ";
+
+    out << log.getClientId() << " ";
+    out << log.getLogLevel() << " ";
+    out << log.getMessage() << ";";
+
+    return out;
+}
+*/

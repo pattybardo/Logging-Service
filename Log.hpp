@@ -6,10 +6,17 @@
 class Log
 {
   public:
-    Log(std::string clientId, int logLevel, std::string message);
+    Log();
+    void setLog(std::string clientId, int logLevel, std::string message);
+
+    std::string getCurrentTime();
+    std::string getClientId();
+    int getLogLevel();
+    std::string getMessage();
+
 
   private:
-    std::string current_time;
+    std::string currentTime;
     std::string clientId;
     int logLevel;
     std::string message;

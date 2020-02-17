@@ -36,7 +36,8 @@ int main ()
            MAX_SIZE
         );
 
-        info me [MESSAGE_COUNT];
+        info me;
+        Log logs [MESSAGE_COUNT];
 
         for (int i=0; i<MESSAGE_COUNT; ++i){
           message_queue::size_type recvd_size;
@@ -56,23 +57,30 @@ int main ()
           iss << serialized_string;
 
           boost::archive::text_iarchive ia(iss);
-          ia >> me[i];
+          ia >> me;
 
+          if (me.message == "exit()")
+          {
+            break;
+          }
           //TODO
-          if (me[i].action == 1) {
+          std::cout << "Test action value: " << me.action << '\n';
+          if (me.action == 1) {
             std::cout << "Starting dump" << '\n';
             --i;
             //TODO: make a seperate function
-            for (int j=0; j < std::size(me); ++j){
-              if (me[j].logLevel >= 0){
-                  auto time = std::chrono::system_clock::now();
-                   std::time_t timeT = std::chrono::system_clock::to_time_t(time);
-                  std::cout << "[ " << std::ctime(&timeT) << " ] "
-                  <<  me[j].clientId << " : " << me[j].message << '\n';
+            for (int j=0; j < std::size(logs); ++j){
+              if (logs[j].getLogLevel() >= 0){
+                  std::cout << logs[j].getCurrentTime()
+                  << logs[j].getLogLevel()<< " : "
+                  << logs[j].getMessage()
+                  <<std::endl;
               }
 
             }
           } else {
+            //std::cout << "receiving log: " << me.message << '\n';
+            logs[i].setLog(me.clientId, me.logLevel, me.message);
             // TODO: Change the storage of all the messages to a buffer of messages
             // This buffer will hold all of the logs, and mayb as well design it to be
             // circular from the beginning
