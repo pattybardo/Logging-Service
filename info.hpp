@@ -9,7 +9,7 @@ class info
             : action(x), clientId(i), logLevel(l), message(n)
         {};
 
-        // Action can either be 0, 1, or 2 (log, dump, clean)
+        // Action can either be 0, 1, or 2 (log, dump, clear)
         unsigned int action;
 
         // ClientId is currently the process ID

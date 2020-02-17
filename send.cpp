@@ -4,10 +4,91 @@
 
 #include <boost/interprocess/ipc/message_queue.hpp>
 #include <boost/archive/text_oarchive.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include "info.hpp"
 
 using namespace boost::interprocess;
+
+
+info logInfo() {
+
+  unsigned int action = 0;
+  std::string clientId;
+  std::string logLevel;
+  std::string message;
+
+  std::cout << "Client ID: " << '\n';
+  getline(std::cin, clientId);
+
+  std::cout << "Log level (0,1,2 - info, warning, error): " << '\n';
+  getline(std::cin, logLevel);
+
+  std::cout << "Message: " << '\n';
+  getline(std::cin, message);
+
+  info rInfo(action, clientId, boost::lexical_cast<int>(logLevel), message);
+
+  return rInfo;
+
+}
+
+info dumpInfo() {
+  unsigned int action = 1;
+  std::string clientId;
+  //string becuase getLine does not accept integers, cast back later
+  std::string dumpLevel;
+  std::string message;
+
+
+
+  std::cout << "Select the minimum dump level (0,1,2 - info, warning, error): " << '\n';
+  getline(std::cin, dumpLevel);
+
+  info rInfo(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
+
+  return rInfo;
+
+}
+
+info cleanInfo() {
+  unsigned int action = 2;
+  std::string clientId;
+  int logLevel;
+  std::string message;
+
+  info rInfo(action, clientId, logLevel, message);
+
+  return rInfo;
+}
+
+info receiveInfo(){
+  std::string request;
+  /*
+  while ( (std::cout << "Choose 0, 1, 2 (log, dump, clean) \n")
+  && (!(std::cin >> x) || x < 0 || x > 2)) {
+    std::cin.clear(); //clear bad input flag
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
+    std::cout << "Invalid input; please re-enter.\n";
+  }
+  */
+  std::cout << "Choose 0, 1, 2 (log, dump, clean) \n";
+  getline(std::cin, request);
+  int x = boost::lexical_cast<int>(request);
+  //std::cin >> x;
+
+  // TODO: maybe do something about this
+  if (x == 0){
+    return logInfo();
+  } else if (x == 1){
+    return dumpInfo();
+  } else {
+    return cleanInfo();
+  }
+
+
+}
+
 
 int main ()
 {
@@ -19,28 +100,15 @@ int main ()
            "mq"
         );
 
+        /*
         std::string message;
         unsigned int action = 0;
         int logLevel;
         std::string clientId = std::to_string(getpid());
+        */
 
         while (true){
-          getline(std::cin, message);
-          if (message == ""){
-            break;
-          } else if (message == "dump") {
-            message = "";
-            action = 1;
-            logLevel = -1;
-          } else if (message == "clear") {
-            logLevel = -1;
-            action = 2;
-          } else {
-            logLevel = 0;
-            action = 0;
-          }
-
-          info me(action, clientId, logLevel, message);
+          info me = receiveInfo();
 
           std::stringstream oss;
           boost::archive::text_oarchive oa(oss);
@@ -51,7 +119,7 @@ int main ()
             usleep(0);
           }
           std::cout << "Message sent" << '\n';
-          if (message == "exit()"){
+          if (me.message == "exit()"){
             break;
           }
           //std::cout << me.id << " : " << me.name << std::endl;
