@@ -12,7 +12,7 @@ class info
         // Action can either be 0, 1, or 2 (log, dump, clear)
         unsigned int action;
 
-        // ClientId is currently the process ID
+        // Default is currently the process ID
         std::string clientId;
 
         // The log level will specify what the level of the log is (0 - info,

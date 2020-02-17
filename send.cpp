@@ -11,6 +11,7 @@
 using namespace boost::interprocess;
 
 
+// TODO: Unit test
 info logInfo() {
 
   unsigned int action = 0;
@@ -33,6 +34,7 @@ info logInfo() {
 
 }
 
+// TODO: Unit test
 info dumpInfo() {
   unsigned int action = 1;
   std::string clientId;
@@ -51,6 +53,7 @@ info dumpInfo() {
 
 }
 
+// TODO: Unit test
 info cleanInfo() {
   unsigned int action = 2;
   std::string clientId;
@@ -62,16 +65,10 @@ info cleanInfo() {
   return rInfo;
 }
 
+// TODO: Unit test
 info receiveInfo(){
+
   std::string request;
-  /*
-  while ( (std::cout << "Choose 0, 1, 2 (log, dump, clean) \n")
-  && (!(std::cin >> x) || x < 0 || x > 2)) {
-    std::cin.clear(); //clear bad input flag
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); //discard input
-    std::cout << "Invalid input; please re-enter.\n";
-  }
-  */
   std::cout << "Choose 0, 1, 2 (log, dump, clean) \n";
   getline(std::cin, request);
   int x = boost::lexical_cast<int>(request);
@@ -89,6 +86,7 @@ info receiveInfo(){
 
 }
 
+// TODO: Unit test
 void sendMessage(info me, message_queue * mq)
 {
   std::stringstream oss;

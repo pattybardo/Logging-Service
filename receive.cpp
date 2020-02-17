@@ -13,16 +13,7 @@
 using namespace boost::interprocess;
 
 
-// TODO
-/*
-void dump(info logs[])
-{
-  for (int i=0; i < std::size(logs); ++i){
-    std::cout << logs[i].clientId << " : " << logs[i].message << '\n';
-  }
-}
-*/
-
+// TODO: Unit test
 info receiveMessage(message_queue * mq)
 {
     info me;
@@ -47,8 +38,10 @@ info receiveMessage(message_queue * mq)
     return me;
 }
 
+// TODO: Unit test
 void dumpLogs(Log * logs, int i, int logLevel)
 {
+    // TODO: Deal with writing to to text file here
     for (int j=i; j < BUFFER_SIZE+i; ++j){
         if (logs[j%BUFFER_SIZE].getLogLevel() >= logLevel){
             std::cout << logs[j%BUFFER_SIZE].getCurrentTime() << " "

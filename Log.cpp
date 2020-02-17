@@ -9,6 +9,7 @@ Log::Log()
   setLog();
 }
 
+// TODO: Unit test
 void Log::setLog(std::string pClientId, int pLogLevel, std::string pMessage)
 {
   time_t rawtime;
@@ -30,6 +31,7 @@ void Log::setLog(std::string pClientId, int pLogLevel, std::string pMessage)
   message = pMessage;
 }
 
+// TODO: Unit test
 void Log::setLog()
 {
   currentTime = "";
@@ -54,6 +56,8 @@ int Log::getLogLevel()
   return logLevel;
 }
 
+
+// TODO: Unit test
 std::string Log::getLogLevelPrint()
 {
   if (logLevel == 0){
