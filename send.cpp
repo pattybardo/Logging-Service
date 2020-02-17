@@ -28,10 +28,13 @@ int main ()
           getline(std::cin, message);
           if (message == ""){
             break;
-          } else if (message == "dump"){
+          } else if (message == "dump") {
             message = "";
             action = 1;
             logLevel = -1;
+          } else if (message == "clear") {
+            logLevel = -1;
+            action = 2;
           } else {
             logLevel = 0;
             action = 0;
@@ -54,6 +57,6 @@ int main ()
     }
     catch(interprocess_exception &ex)
     {
-        std::cerr << ex.what() << std::endl;
+        std::cerr << ex.what() << '\n';
     }
 }

@@ -8,6 +8,7 @@ class Log
   public:
     Log();
     void setLog(std::string clientId, int logLevel, std::string message);
+    void setLog();
 
     std::string getCurrentTime();
     std::string getClientId();

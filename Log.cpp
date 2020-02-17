@@ -6,7 +6,7 @@
 // TODO
 Log::Log()
 {
-  setLog("default", -1, "");
+  setLog();
 }
 
 void Log::setLog(std::string pClientId, int pLogLevel, std::string pMessage)
@@ -18,7 +18,7 @@ void Log::setLog(std::string pClientId, int pLogLevel, std::string pMessage)
   time (&rawtime);
   timeinfo = localtime(&rawtime);
 
-  strftime(buffer,sizeof(buffer),"%d-%m-%Y %H:%M:%S",timeinfo);
+  strftime(buffer,sizeof(buffer),"[%d-%m-%Y %H:%M:%S]",timeinfo);
   std::string str(buffer);
 
 
@@ -28,6 +28,15 @@ void Log::setLog(std::string pClientId, int pLogLevel, std::string pMessage)
   clientId = pClientId;
   logLevel = pLogLevel;
   message = pMessage;
+}
+
+void Log::setLog()
+{
+  currentTime = "";
+  clientId = "";
+  logLevel = -1;
+  message = "";
+
 }
 
 std::string Log::getCurrentTime()

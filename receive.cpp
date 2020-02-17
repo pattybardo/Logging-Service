@@ -65,26 +65,34 @@ int main ()
           }
           //TODO
           std::cout << "Test action value: " << me.action << '\n';
-          if (me.action == 1) {
-            std::cout << "Starting dump" << '\n';
-            --i;
-            //TODO: make a seperate function
-            for (int j=0; j < std::size(logs); ++j){
-              if (logs[j].getLogLevel() >= 0){
-                  std::cout << logs[j].getCurrentTime()
-                  << logs[j].getLogLevel()<< " : "
-                  << logs[j].getMessage()
-                  <<std::endl;
-              }
-
-            }
-          } else {
+          if (me.action == 0) {
             //std::cout << "receiving log: " << me.message << '\n';
             logs[i].setLog(me.clientId, me.logLevel, me.message);
             // TODO: Change the storage of all the messages to a buffer of messages
             // This buffer will hold all of the logs, and mayb as well design it to be
             // circular from the beginning
             //std::cout << me[i].clientId << " : " << me[i].message << std::endl;
+          } else if (me.action == 1) {
+            std::cout << "Starting dump" << '\n';
+            --i;
+            //TODO: make a seperate function
+            for (int j=0; j < std::size(logs); ++j){
+              if (logs[j].getLogLevel() >= 0){
+                  std::cout <<  logs[j].getCurrentTime() << " "
+                  << logs[j].getLogLevel()<< " : "
+                  << logs[j].getMessage()
+                  << '\n';
+              }
+
+            }
+          } else {
+            std::cout << "Starting clear" << '\n';
+            //TODO: cleanup the --i and the for loop in general, could be a
+            // While loop
+            --i;
+            for (int j=0; j < std::size(logs); ++j){
+              logs[j].setLog();
+            }
           }
 
 
@@ -96,7 +104,7 @@ int main ()
     }
     catch(interprocess_exception &ex)
     {
-        std::cerr << ex.what() << std::endl;
+        std::cerr << ex.what() << '\n';
     }
 
     message_queue::remove("mq");
