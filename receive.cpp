@@ -75,11 +75,12 @@ int main ()
             std::cout << "Starting dump" << '\n';
             //TODO: make a seperate function
             for (int j=i; j < std::size(logs)+i; ++j){
-              if (logs[j%BUFFER_SIZE].getLogLevel() >= 0){
-                  std::cout <<  logs[j%BUFFER_SIZE].getCurrentTime() << " "
-                  << logs[j%BUFFER_SIZE].getLogLevelPrint()<< " : "
-                  << logs[j%BUFFER_SIZE].getMessage()
-                  << '\n';
+              if (logs[j%BUFFER_SIZE].getLogLevel() >= me.logLevel){
+                  std::cout << logs[j%BUFFER_SIZE].getCurrentTime() << " "
+                            << logs[j%BUFFER_SIZE].getClientId() << " "
+                            << logs[j%BUFFER_SIZE].getLogLevelPrint()<< " : "
+                            << logs[j%BUFFER_SIZE].getMessage()
+                            << '\n';
               }
 
             }
