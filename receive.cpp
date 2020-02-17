@@ -23,6 +23,44 @@ void dump(info logs[])
 }
 */
 
+info receiveMessage(message_queue * mq)
+{
+    info me;
+    message_queue::size_type recvd_size;
+    unsigned int priority;
+
+
+
+    std::stringstream iss;
+    std::string serialized_string;
+    serialized_string.resize(MAX_SIZE);
+
+    while (!mq->try_receive(&serialized_string[0], MAX_SIZE, recvd_size, priority)){
+        usleep(0);
+    }
+
+    //mq.try_receive(&serialized_string[0], MAX_SIZE, recvd_size, priority);
+    iss << serialized_string;
+
+    boost::archive::text_iarchive ia(iss);
+    ia >> me;
+    return me;
+}
+
+void dumpLogs(Log * logs, int i, int logLevel)
+{
+    for (int j=i; j < BUFFER_SIZE+i; ++j){
+        if (logs[j%BUFFER_SIZE].getLogLevel() >= logLevel){
+            std::cout << logs[j%BUFFER_SIZE].getCurrentTime() << " "
+                      << logs[j%BUFFER_SIZE].getClientId() << " "
+                      << logs[j%BUFFER_SIZE].getLogLevelPrint()<< " : "
+                      << logs[j%BUFFER_SIZE].getMessage()
+                      << '\n';
+        }
+
+    }
+}
+
 int main ()
 {
     try
@@ -36,60 +74,54 @@ int main ()
            MAX_SIZE
         );
 
-        info me;
+
         Log logs [BUFFER_SIZE];
         int i = 0;
 
         while (true){
-          message_queue::size_type recvd_size;
-          unsigned int priority;
 
+            info me = receiveMessage(&mq);
 
-
-          std::stringstream iss;
-          std::string serialized_string;
-          serialized_string.resize(MAX_SIZE);
-
-          while (!mq.try_receive(&serialized_string[0], MAX_SIZE, recvd_size, priority)){
-            usleep(0);
-          }
-
-          //mq.try_receive(&serialized_string[0], MAX_SIZE, recvd_size, priority);
-          iss << serialized_string;
-
-          boost::archive::text_iarchive ia(iss);
-          ia >> me;
-
-          if (me.message == "exit()")
-          {
-            break;
-          }
-          //TODO
-          std::cout << "Test action value: " << me.action << '\n';
-          if (me.action == 0) {
-            //std::cout << "receiving log: " << me.message << '\n';
-            logs[i%BUFFER_SIZE].setLog(me.clientId, me.logLevel, me.message);
-            ++i;
-            //std::cout << me[i].clientId << " : " << me[i].message << std::endl;
-          } else if (me.action == 1) {
-            std::cout << "Starting dump" << '\n';
-            //TODO: make a seperate function
-            for (int j=i; j < std::size(logs)+i; ++j){
-              if (logs[j%BUFFER_SIZE].getLogLevel() >= me.logLevel){
-                  std::cout << logs[j%BUFFER_SIZE].getCurrentTime() << " "
-                            << logs[j%BUFFER_SIZE].getClientId() << " "
-                            << logs[j%BUFFER_SIZE].getLogLevelPrint()<< " : "
-                            << logs[j%BUFFER_SIZE].getMessage()
-                            << '\n';
-              }
-
+            // Dev command for closing the service
+            if (me.message == "exit()")
+            {
+                break;
             }
-          } else {
-            std::cout << "Starting clear" << '\n';
-            for (int j=i; j < std::size(logs)+i; ++j){
-              logs[j%BUFFER_SIZE].setLog();
+
+            //TODO
+            std::cout << "Test action value: " << me.action << '\n';
+
+            // Log action
+            if (me.action == 0) {
+                //
+                logs[i%BUFFER_SIZE].setLog(me.clientId, me.logLevel, me.message);
+                ++i;
+
+            // Dump action
+            } else if (me.action == 1) {
+                std::cout << "Starting dump" << '\n';
+                //TODO: make a seperate function
+                dumpLogs(logs, i, me.logLevel);
+                /*
+                for (int j=i; j < std::size(logs)+i; ++j){
+                    if (logs[j%BUFFER_SIZE].getLogLevel() >= me.logLevel){
+                        std::cout << logs[j%BUFFER_SIZE].getCurrentTime() << " "
+                                  << logs[j%BUFFER_SIZE].getClientId() << " "
+                                  << logs[j%BUFFER_SIZE].getLogLevelPrint()<< " : "
+                                  << logs[j%BUFFER_SIZE].getMessage()
+                                  << '\n';
+                    }
+
+                }
+                */
+
+            // Clear action
+            } else {
+                std::cout << "Starting clear" << '\n';
+                for (int j=i; j < std::size(logs)+i; ++j){
+                    logs[j%BUFFER_SIZE].setLog();
+                }
             }
-          }
 
 
 
