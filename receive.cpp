@@ -5,14 +5,16 @@
 #include <boost/interprocess/ipc/message_queue.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
-#include "Request.hpp"
-#include "Log.hpp"
+//#include "Request.hpp"
+//#include "Log.hpp"
+#include "LoggingService.hpp"
 
+// TODO: This is defined twice!!! BADDD
 #define BUFFER_SIZE 5
 
 using namespace boost::interprocess;
 
-
+/*
 // TODO: Unit test
 Request receiveMessage(message_queue * mq)
 {
@@ -53,6 +55,7 @@ void dumpLogs(Log * logs, int i, int logLevel)
 
     }
 }
+*/
 
 int main ()
 {
@@ -71,9 +74,11 @@ int main ()
         Log logs [BUFFER_SIZE];
         int i = 0;
 
+        LoggingService loggingService;
+
         while (true){
 
-            Request me = receiveMessage(&mq);
+            Request me = loggingService.receiveMessage(&mq);
 
             // Dev command for closing the service
             if (me.message == "exit()")
@@ -94,7 +99,7 @@ int main ()
             } else if (me.action == 1) {
                 std::cout << "Starting dump" << '\n';
                 //TODO: make a seperate function
-                dumpLogs(logs, i, me.logLevel);
+                loggingService.dumpLogs(logs, i, me.logLevel);
                 /*
                 for (int j=i; j < std::size(logs)+i; ++j){
                     if (logs[j%BUFFER_SIZE].getLogLevel() >= me.logLevel){
@@ -110,10 +115,13 @@ int main ()
 
             // Clear action
             } else {
+                loggingService.clearLogs(logs,i);
+                /*
                 std::cout << "Starting clear" << '\n';
                 for (int j=i; j < std::size(logs)+i; ++j){
                     logs[j%BUFFER_SIZE].setLog();
                 }
+                */
             }
 
 
