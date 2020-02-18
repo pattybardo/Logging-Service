@@ -8,7 +8,7 @@ class LoggingService
 {
   public:
     Request receiveMessage(boost::interprocess::message_queue * mq);
-    void dumpLogs(Log * logs, int i, int logLevel);
-    void clearLogs(Log * logs, int i);
+    void dumpLogs(Log * logs, int i, int logLevel, int bufferSize);
+    void clearLogs(Log * logs, int i, int bufferSize);
 };
 #endif

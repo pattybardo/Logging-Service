@@ -1,13 +1,10 @@
 #include <string>
 #include <iostream>
 
-
 #include <boost/interprocess/ipc/message_queue.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
 #include "LoggingService.hpp"
-
-#define BUFFER_SIZE 5
 
 using namespace boost::interprocess;
 
@@ -28,7 +25,6 @@ Request LoggingService::receiveMessage(message_queue * mq)
         usleep(0);
     }
 
-    //mq.try_receive(&serialized_string[0], MAX_SIZE, recvd_size, priority);
     iss << serialized_string;
 
     boost::archive::text_iarchive ia(iss);
@@ -37,25 +33,24 @@ Request LoggingService::receiveMessage(message_queue * mq)
 }
 
 // TODO: Unit test
-void LoggingService::dumpLogs(Log * logs, int i, int logLevel)
+void LoggingService::dumpLogs(Log * logs, int i, int logLevel, int bufferSize)
 {
     // TODO: Deal with writing to to text file here
-    for (int j=i; j < BUFFER_SIZE+i; ++j){
-        if (logs[j%BUFFER_SIZE].getLogLevel() >= logLevel){
-            std::cout << logs[j%BUFFER_SIZE].getCurrentTime() << " "
-                      << logs[j%BUFFER_SIZE].getClientId() << " "
-                      << logs[j%BUFFER_SIZE].getLogLevelPrint()<< " : "
-                      << logs[j%BUFFER_SIZE].getMessage()
+    for (int j=i; j < bufferSize+i; ++j){
+        if (logs[j%bufferSize].getLogLevel() >= logLevel){
+            std::cout << logs[j%bufferSize].getCurrentTime() << " "
+                      << logs[j%bufferSize].getClientId() << " "
+                      << logs[j%bufferSize].getLogLevelPrint()<< " : "
+                      << logs[j%bufferSize].getMessage()
                       << '\n';
         }
-
     }
 }
 
-void LoggingService::clearLogs(Log * logs, int i)
+void LoggingService::clearLogs(Log * logs, int i, int bufferSize)
 {
   std::cout << "Starting clear" << '\n';
-  for (int j=i; j < BUFFER_SIZE+i; ++j){
-      logs[j%BUFFER_SIZE].setLog();
+  for (int j=i; j < bufferSize+i; ++j){
+      logs[j%bufferSize].setLog();
   }
 }
