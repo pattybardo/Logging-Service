@@ -1,3 +1,6 @@
+#ifndef REQUEST_H
+#define REQUEST_H
+
 #include <boost/serialization/string.hpp>
 
 #define MAX_SIZE 1000
@@ -35,3 +38,4 @@ class Request
                 ar & message;
             }
 };
+#endif

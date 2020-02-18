@@ -17,7 +17,10 @@ TEST_CASE( "1: All test cases reside in other .cpp files (empty)", "[multi-file:
 
 // Compile & run:
 // - g++ -std=c++11 -Wall -c 020-TestCase-1.cpp
-// - g++ -std=c++11 -Wall -o 020-TestCase 020-TestCase-1.o 020-TestCase-2.cpp 
+// - g++ -std=c++11 -Wall -o 020-TestCase 020-TestCase-1.o 020-TestCase-2.cpp
+// g++ -std=c++17 -Wall TestCase1.cpp TestCase2.cpp -o TestCase
+// ./TestCase --success
+// g++ -std=c++17 -Wall
 // ./020-TestCase --success
 
 // Expected test case listing:
