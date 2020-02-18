@@ -3,7 +3,7 @@ North Logging Service Challenge
 
 ## Build Instructions
 
-After cloning this repository, it is important to have the boost C++ library installed. I did this using "brew install boost". Once this is installed, it is important to alter the Makefile. Replace the LDIR property with the location of the boost library. For reference, mine was installed in /usr/local/Cellar/boost/1.72.0/lib/. 
+After cloning this repository, it is important to have the boost C++ library installed. I did this using "brew install boost". Once this is installed, it is important to alter the Makefile. Replace the LDIR property with the location of the boost library. For reference, mine was installed in /usr/local/Cellar/boost/1.72.0/lib/.
 
 This was compiled with g++ , Apple clang version 11.0.0 (clang-1100.0.33.17)
 
@@ -13,7 +13,7 @@ LoggingService must be executed first, and takes no arguments.
 
 LoggingClient can be executed many times (multiple clients concurrently), and can take either 1 or no command line arguments. The command line argument is a .txt file that is formatted properly that has pre-written requests. More on this later. If no file is passed, the user will be prompted to input requests from stdin.
 
-UnitTest can be executed to run the unit tests. Useful arguments include --reporter compact, and --success. 
+UnitTest can be executed to run the unit tests. Useful arguments include --reporter compact, and --success.
 
 <code> make </code>
 
@@ -25,7 +25,7 @@ UnitTest can be executed to run the unit tests. Useful arguments include --repor
 
 It is important to note that the requests (log, dump, and clear) are requested as 0, 1, and 2. The log level is also designated as 0, 1, and 2 (info, warning, and error). This is important if you would like to alter test.txt to generate your own test cases, and when inputting into stdin for LoggingClient.
 
-The test.txt file contains lines of request properties. Log requests take 4 lines, dump requests take 2 lines, clear requests take 1 line. 
+The test.txt file contains lines of request properties. Log requests take 4 lines, dump requests take 2 lines, clear requests take 1 line.
 
 Log:<br>
 1. Action = 0. If you would like to input a log, the first line is 0.
@@ -53,15 +53,15 @@ If you would like to continue testing using the client and server, or run the te
 
 ## Assumptions
 
-The first assumption is that there will be no incorrect inputs. Input error handling was not done for the sake of brevity. 
+The first assumption is that there will be no incorrect inputs. Input error handling was not done for the sake of brevity.
 
-Another assumption is that memory is not limited. 
+Another assumption is that memory is not limited.
 
 ## Background
 
 The methods I had considered for communication between the processes were shared memory, sockets, and a message queue. Socketting did not make sense for this challenge since I assumed that this is an interprocess problem occurring on the same machine. Since concurrent access to the service was highlighted in the requirements, I chose to use a message queue.
 
-The drawbacks of the message queue are that there is more overhead than the shared memory, therefore the cost of memory usage may outweigh handling thread-safety for certain applications. Another drawback of the message queue is that the service receiving the message does not know beforehand what the message will be. This application has 3 different types of requests, and therefore a data structure that can encompass all three request types was used. This is inefficient because unnecessary memory is allocated for certain requests. 
+The drawbacks of the message queue are that there is more overhead than the shared memory, therefore the cost of memory usage may outweigh handling thread-safety for certain applications. Another drawback of the message queue is that the service receiving the message does not know beforehand what the message will be. This application has 3 different types of requests, and therefore a data structure that can encompass all three request types was used. This is inefficient because unnecessary memory is allocated for certain requests.
 
 ## Limitations
 
@@ -71,9 +71,9 @@ The message queue takes a maximum number of messages and a max message size. The
 
 Given more time, here are a few things I would like to change.
 
-1. I believe it is possible to send an integer and void pointer as a request across the message queue instead of a general structure. This void pointer can then be recast to the appropriate request data type on the receiving end depending on the value of the integer. 
+1. I believe it is possible to send an integer and void pointer as a request across the message queue instead of a general structure. This void pointer can then be recast to the appropriate request data type on the receiving end depending on the value of the integer.
 
-2. I would incorporate the writing to filesystem in the LoggingServiceMain.cpp. This would be done whenever a log request is sent, and the new log object is created. The information could then be appended to an output file using fstream so that the informaton persists past the lifetime of the service. 
+2. I would incorporate the writing to filesystem in the LoggingServiceMain.cpp. This would be done whenever a log request is sent, and the new log object is created. The information could then be appended to an output file using fstream so that the informaton persists past the lifetime of the service.
 
 3. This is where I figured a bit too late the message queue may not be the best design choice if each client wanted the logs to be dumped back to them. Only when I started to really consider the bonus did I realize this, and it is because if the LoggingService is using a message queue to communicate with many concurrent clients, who the dump is for cannot be determined until after the message is taken from the queue. Therefore if the dump does not belong to them (they are still waiting for their dump request) they would have to requeue the message, and this seems highly inefficient. I may implement a shared memory block for returning the dump back to the users.
 
@@ -90,7 +90,7 @@ Log Client : DONE<br>
 Log Service : DONE<br>
 Unit Testing : DONE<br>
 Circular Buffer : DONE<br>
-Persistant logs : INCOMPLETE (for now)<br>
+Persistent logs : INCOMPLETE (for now)<br>
 Dumps returned to client : INCOMPLETE (for now)<br>
 
 If there are any questions at all about anything pertaining to this challenge, please feel free to ask. I have put a lot of time an effort into this, and I know I have probably left some information out.
