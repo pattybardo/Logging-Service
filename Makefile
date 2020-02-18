@@ -3,8 +3,7 @@ CC = g++
 
 LIBS = -lboost_serialization
 
-output: LoggingClient LoggingService UnitTest
-	#g++ send.o receive.o -o output
+all: LoggingClient LoggingService UnitTest
 
 LoggingClient: LoggingClientMain.cpp
 	$(CC) -std=c++17 LoggingClientMain.cpp LoggingClient.cpp -o LoggingClient -L$(LDIR) $(LIBS)
