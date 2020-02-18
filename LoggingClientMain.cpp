@@ -1,11 +1,9 @@
 #include <string>
-#include <sstream>
 #include <fstream>
 #include <iostream>
 
 #include <boost/interprocess/ipc/message_queue.hpp>
 #include <boost/archive/text_oarchive.hpp>
-#include <boost/lexical_cast.hpp>
 
 #include "LoggingClient.hpp"
 
