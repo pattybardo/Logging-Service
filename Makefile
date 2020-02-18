@@ -9,4 +9,4 @@ receive.o: receive.cpp
 	g++ -std=c++17 receive.cpp Log.cpp -o receive -L/usr/local/Cellar/boost/1.72.0/lib/ -lboost_serialization
 
 clean:
-	rm *.o send receive
+	rm send receive

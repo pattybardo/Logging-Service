@@ -29,9 +29,9 @@ Request logRequest() {
   std::cout << "Message: " << '\n';
   getline(std::cin, message);
 
-  Request rRequest(action, clientId, boost::lexical_cast<int>(logLevel), message);
+  Request req(action, clientId, boost::lexical_cast<int>(logLevel), message);
 
-  return rRequest;
+  return req;
 
 }
 
@@ -47,9 +47,9 @@ Request logTextRequest(std::ifstream & myfile) {
   getline(myfile, logLevel);
   getline(myfile, message);
 
-  Request rRequest(action, clientId, boost::lexical_cast<int>(logLevel), message);
+  Request req(action, clientId, boost::lexical_cast<int>(logLevel), message);
 
-  return rRequest;
+  return req;
 
 }
 
@@ -66,9 +66,9 @@ Request dumpRequest() {
   std::cout << "Select the minimum dump level (0,1,2 - info, warning, error): " << '\n';
   getline(std::cin, dumpLevel);
 
-  Request rRequest(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
+  Request req(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
 
-  return rRequest;
+  return req;
 
 }
 
@@ -81,9 +81,9 @@ Request dumpTextRequest(std::ifstream & myfile) {
   getline(myfile, dumpLevel);
 
   std::cout << dumpLevel << '\n';
-  Request rRequest(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
+  Request req(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
 
-  return rRequest;
+  return req;
 
 }
 
@@ -94,9 +94,9 @@ Request cleanRequest() {
   int logLevel;
   std::string message;
 
-  Request rRequest(action, clientId, logLevel, message);
+  Request req(action, clientId, logLevel, message);
 
-  return rRequest;
+  return req;
 }
 
 // TODO: Unit test

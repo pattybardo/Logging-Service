@@ -75,16 +75,3 @@ std::string Log::getMessage()
 {
   return message;
 }
-
-
-/*
-std::ostream& operator<< (std::ostream &out, Log const &log) {
-    out << "[" << log.getCurrentTime() << "] ";
-
-    out << log.getClientId() << " ";
-    out << log.getLogLevel() << " ";
-    out << log.getMessage() << ";";
-
-    return out;
-}
-*/
