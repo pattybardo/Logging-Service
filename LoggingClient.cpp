@@ -90,7 +90,7 @@ Request LoggingClient::dumpTextRequest(std::ifstream & myfile)
 }
 
 // TODO: Unit test
-Request LoggingClient::cleanRequest()
+Request LoggingClient::clearRequest()
 {
   unsigned int action = 2;
   std::string clientId;
@@ -118,7 +118,7 @@ Request LoggingClient::receiveRequest()
   } else if (x == 1){
     return LoggingClient::dumpRequest();
   } else {
-    return LoggingClient::cleanRequest();
+    return LoggingClient::clearRequest();
   }
 
 
@@ -132,7 +132,7 @@ Request LoggingClient::receiveTextRequest(std::ifstream & myfile, std::string li
   } else if (action == 1){
     return LoggingClient::dumpTextRequest(myfile);
   } else {
-    return LoggingClient::cleanRequest();
+    return LoggingClient::clearRequest();
   }
 }
 

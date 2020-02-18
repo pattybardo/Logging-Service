@@ -14,7 +14,7 @@ class LoggingClient
     Request dumpRequest();
     Request dumpTextRequest(std::ifstream & myfile);
 
-    Request cleanRequest();
+    Request clearRequest();
 
     Request receiveRequest();
     Request receiveTextRequest(std::ifstream & myfile, std::string line);
