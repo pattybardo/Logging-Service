@@ -82,7 +82,6 @@ Request LoggingClient::dumpTextRequest(std::ifstream & myfile)
 
   getline(myfile, dumpLevel);
 
-  std::cout << dumpLevel << '\n';
   Request req(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
 
   return req;

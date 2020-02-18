@@ -23,7 +23,7 @@ TEST_CASE( "1: LoggingClient::logTextRequest()", "[multi-file:2]" ) {
     REQUIRE( req.action == 0);
     REQUIRE( req.clientId == "Test" );
     REQUIRE( req.logLevel == 1 );
-    REQUIRE( req.message == "This is a unit test message" );
+    REQUIRE( req.message == "Test message" );
 }
 
 TEST_CASE( "2: Testing LoggingClient::dumpTextRequest()", "[multi-file:2]" ) {
@@ -40,21 +40,33 @@ TEST_CASE( "2: Testing LoggingClient::dumpTextRequest()", "[multi-file:2]" ) {
     REQUIRE( req.logLevel == 2);
 }
 
-/*
 TEST_CASE( "3: Testing LoggingClient::clearRequest()", "[multi-file:2]" ) {
     LoggingClient loggingClient;
     Request req;
 
-    std::ifstream myfile ("UnitTestExamples/dumpExample.txt");
-    if (myfile.is_open()) {
-      req = loggingClient.logTextRequest(myfile);
+    req = loggingClient.clearRequest();
 
-      myfile.close();
-    }
-    REQUIRE( req.action == 1);
-    REQUIRE( req.logLevel == 2);
+    REQUIRE( req.action == 2);
 }
-*/
+
+TEST_CASE( "4: Testing LoggingClient::receiveTextRequest()", "[multi-file:2]" ) {
+  LoggingClient loggingClient;
+  Request req;
+  std::string line;
+
+  std::ifstream myfile ("UnitTestExamples/requestExample.txt");
+  if (myfile.is_open()) {
+    getline(myfile, line);
+    req = loggingClient.receiveTextRequest(myfile, line);
+
+    myfile.close();
+  }
+  REQUIRE( req.action == 0);
+  REQUIRE( req.clientId == "Tester" );
+  REQUIRE( req.logLevel == 2 );
+  REQUIRE( req.message == "North rocks!" );
+}
+
 
 TEST_CASE( "2: Unit Test compiling", "[multi-file:2]" ) {
     REQUIRE( 2 == 2 );
