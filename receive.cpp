@@ -82,7 +82,7 @@ int main ()
             }
 
             //TODO
-            std::cout << "Test action value: " << me.action << '\n';
+            //std::cout << "Test action value: " << me.action << '\n';
 
             // Log action
             if (me.action == 0) {

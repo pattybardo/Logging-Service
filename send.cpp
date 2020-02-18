@@ -1,5 +1,6 @@
 #include <string>
 #include <sstream>
+#include <fstream>
 #include <iostream>
 
 #include <boost/interprocess/ipc/message_queue.hpp>
@@ -35,6 +36,24 @@ info logInfo() {
 }
 
 // TODO: Unit test
+info logTextInfo(std::ifstream & myfile) {
+
+  unsigned int action = 0;
+  std::string clientId;
+  std::string logLevel;
+  std::string message;
+
+  getline(myfile, clientId);
+  getline(myfile, logLevel);
+  getline(myfile, message);
+
+  info rInfo(action, clientId, boost::lexical_cast<int>(logLevel), message);
+
+  return rInfo;
+
+}
+
+// TODO: Unit test
 info dumpInfo() {
   unsigned int action = 1;
   std::string clientId;
@@ -47,6 +66,21 @@ info dumpInfo() {
   std::cout << "Select the minimum dump level (0,1,2 - info, warning, error): " << '\n';
   getline(std::cin, dumpLevel);
 
+  info rInfo(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
+
+  return rInfo;
+
+}
+
+info dumpTextInfo(std::ifstream & myfile) {
+  unsigned int action = 1;
+  std::string clientId;
+  std::string dumpLevel;
+  std::string message;
+
+  getline(myfile, dumpLevel);
+
+  std::cout << dumpLevel << '\n';
   info rInfo(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
 
   return rInfo;
@@ -86,6 +120,19 @@ info receiveInfo(){
 
 }
 
+info receiveTextInfo(std::ifstream & myfile, std::string line)
+{
+  unsigned int action = boost::lexical_cast<int>(line);
+  if (action == 0){
+    return logTextInfo(myfile);
+  } else if (action == 1){
+    return dumpTextInfo(myfile);
+  } else {
+    return cleanInfo();
+  }
+}
+
+
 // TODO: Unit test
 void sendMessage(info me, message_queue * mq)
 {
@@ -100,7 +147,7 @@ void sendMessage(info me, message_queue * mq)
 }
 
 
-int main ()
+int main (int argc, char** argv)
 {
     try
     {
@@ -110,19 +157,44 @@ int main ()
            "mq"
         );
 
-        while (true){
+        if (argv[1]){
+          //std::cout << argv[1] << '\n';
+          std::string file = argv[1];
+          std::string line;
+          std::ifstream myfile (file);
+          if (myfile.is_open())
+          {
+            while (getline (myfile,line)){
+              // Run the reception of info, and then sending the message
+              info me = receiveTextInfo(myfile, line);
 
-          info me = receiveInfo();
-          sendMessage(me, &mq);
+              sendMessage(me, &mq);
 
-          std::cout << "Message sent" << '\n';
+              std::cout << "Message sent" << '\n';
 
-          // This is here for testing, just to terminate the receive service
-          if (me.message == "exit()"){
-            break;
+            }
+          } else {
+            std::cout << "Unable to open file";
           }
-          //std::cout << me.id << " : " << me.name << std::endl;
+        } else {
+          while (true){
+
+            info me = receiveInfo();
+
+
+            sendMessage(me, &mq);
+
+            std::cout << "Message sent" << '\n';
+
+            // This is here for testing, just to terminate the receive service
+            if (me.message == "exit()"){
+              break;
+            }
+            //std::cout << me.id << " : " << me.name << std::endl;
+          }
         }
+
+
 
     }
     catch(interprocess_exception &ex)
