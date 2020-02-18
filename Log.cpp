@@ -1,9 +1,9 @@
-#include "Log.hpp"
 #include <chrono>
 #include <ctime>
 #include <iostream>
 
-// TODO
+#include "Log.hpp"
+
 Log::Log()
 {
   setLog();
