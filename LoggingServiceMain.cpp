@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <fstream>
 
 #include <boost/interprocess/ipc/message_queue.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -26,6 +27,7 @@ int main ()
         Log logs [BUFFER_SIZE];
         int i = 0;
 
+
         while (true){
 
             Request me = loggingService.receiveMessage(&mq);
@@ -51,6 +53,7 @@ int main ()
                 loggingService.clearLogs(logs,i, BUFFER_SIZE);
             }
         }
+
     }
     catch(interprocess_exception &ex)
     {

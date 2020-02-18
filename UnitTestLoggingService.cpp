@@ -8,6 +8,7 @@
 
 //#include "LoggingService.hpp"
 #include "LoggingClient.hpp"
+#include "LoggingService.hpp"
 
 
 TEST_CASE( "1: LoggingClient::logTextRequest()", "[multi-file:2]" ) {
@@ -21,7 +22,7 @@ TEST_CASE( "1: LoggingClient::logTextRequest()", "[multi-file:2]" ) {
       myfile.close();
     }
     REQUIRE( req.action == 0);
-    REQUIRE( req.clientId == "Test" );
+    REQUIRE( req.clientId == "Travis" );
     REQUIRE( req.logLevel == 1 );
     REQUIRE( req.message == "Test message" );
 }
@@ -62,11 +63,49 @@ TEST_CASE( "4: Testing LoggingClient::receiveTextRequest()", "[multi-file:2]" ) 
     myfile.close();
   }
   REQUIRE( req.action == 0);
-  REQUIRE( req.clientId == "Tester" );
+  REQUIRE( req.clientId == "Nathan" );
   REQUIRE( req.logLevel == 2 );
   REQUIRE( req.message == "North rocks!" );
 }
 
+TEST_CASE( "5: Testing LoggingClient::sendMessage() with  LoggingService::receiveMessage()", "[multi-file:2]" ) {
+  LoggingClient loggingClient;
+  LoggingService loggingService;
+  Request req(0, "Edwin", 1, "Test message");
+  std::string line;
+
+  boost::interprocess::message_queue mq_test
+  (
+    boost::interprocess::open_or_create,
+    "mq_test",
+    10,
+    MAX_SIZE
+  );
+
+  loggingClient.sendMessage(req, &mq_test);
+  Request recvReq = loggingService.receiveMessage(&mq_test);
+  boost::interprocess::message_queue::remove("mq_test");
+
+  REQUIRE( recvReq.action == 0);
+  REQUIRE( recvReq.clientId == "Edwin" );
+  REQUIRE( recvReq.logLevel == 1 );
+  REQUIRE( recvReq.message == "Test message" );
+
+}
+
+TEST_CASE( "6: Testing Log::setLog()", "[multi-file:2]" ) {
+    Log log;
+    log.setLog("Alex", 1, "South");
+
+    REQUIRE( log.getClientId() == "Alex" );
+    REQUIRE( log.getLogLevel() == 1 );
+    REQUIRE( log.getMessage() == "South" );
+}
+/*
+TEST_CASE( "7: Testing LoggingService::dumpLogs()", "[multi-file:2]" ) {
+
+}
+*/
 
 TEST_CASE( "2: Unit Test compiling", "[multi-file:2]" ) {
     REQUIRE( 2 == 2 );
