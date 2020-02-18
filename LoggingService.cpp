@@ -1,5 +1,6 @@
 #include <string>
 #include <iostream>
+#include <fstream>
 
 #include <boost/interprocess/ipc/message_queue.hpp>
 #include <boost/archive/text_iarchive.hpp>
@@ -8,7 +9,6 @@
 
 using namespace boost::interprocess;
 
-// TODO: Unit test
 Request LoggingService::receiveMessage(message_queue * mq)
 {
     Request me;
@@ -32,10 +32,8 @@ Request LoggingService::receiveMessage(message_queue * mq)
     return me;
 }
 
-// TODO: Unit test
 void LoggingService::dumpLogs(Log * logs, int i, int logLevel, int bufferSize)
 {
-    // TODO: Deal with writing to to text file here
     for (int j=i; j < bufferSize+i; ++j){
         if (logs[j%bufferSize].getLogLevel() >= logLevel){
             std::cout << logs[j%bufferSize].getCurrentTime() << " "

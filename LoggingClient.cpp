@@ -10,7 +10,6 @@
 #include "LoggingClient.hpp"
 
 
-// TODO: Unit test
 Request LoggingClient::logRequest()
 {
 
@@ -34,7 +33,6 @@ Request LoggingClient::logRequest()
 
 }
 
-// TODO: Unit test
 Request LoggingClient::logTextRequest(std::ifstream & myfile)
 {
 
@@ -53,7 +51,6 @@ Request LoggingClient::logTextRequest(std::ifstream & myfile)
 
 }
 
-// TODO: Unit test
 Request LoggingClient::dumpRequest()
 {
   unsigned int action = 1;
@@ -88,7 +85,6 @@ Request LoggingClient::dumpTextRequest(std::ifstream & myfile)
 
 }
 
-// TODO: Unit test
 Request LoggingClient::clearRequest()
 {
   unsigned int action = 2;
@@ -101,7 +97,6 @@ Request LoggingClient::clearRequest()
   return req;
 }
 
-// TODO: Unit test
 Request LoggingClient::receiveRequest()
 {
 
@@ -136,7 +131,6 @@ Request LoggingClient::receiveTextRequest(std::ifstream & myfile, std::string li
 }
 
 
-// TODO: Unit test
 void LoggingClient::sendMessage(Request me, boost::interprocess::message_queue * mq)
 {
   std::stringstream oss;
