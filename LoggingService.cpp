@@ -25,8 +25,8 @@ Request LoggingService::receiveMessage(message_queue * mq)
         usleep(0);
     }
 
+    // Deserialization of the request object
     iss << serialized_string;
-
     boost::archive::text_iarchive ia(iss);
     ia >> me;
     return me;
@@ -47,7 +47,7 @@ void LoggingService::dumpLogs(Log * logs, int i, int logLevel, int bufferSize)
 
 void LoggingService::clearLogs(Log * logs, int i, int bufferSize)
 {
-  std::cout << "Starting clear" << '\n';
+  //std::cout << "Starting clear" << '\n';
   for (int j=i; j < bufferSize+i; ++j){
       logs[j%bufferSize].setLog();
   }

@@ -45,7 +45,7 @@ int main ()
 
             // Dump action
             } else if (me.action == 1) {
-                std::cout << "Starting dump" << '\n';
+                std::cout << "Starting dump with log level: " << me.logLevel << '\n';
                 loggingService.dumpLogs(logs, i, me.logLevel, BUFFER_SIZE);
 
             // Clear action

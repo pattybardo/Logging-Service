@@ -133,6 +133,7 @@ Request LoggingClient::receiveTextRequest(std::ifstream & myfile, std::string li
 
 void LoggingClient::sendMessage(Request me, boost::interprocess::message_queue * mq)
 {
+  // Serialization of the request object before being queued
   std::stringstream oss;
   boost::archive::text_oarchive oa(oss);
   oa << me;
