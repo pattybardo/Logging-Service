@@ -22,7 +22,6 @@ int main (int argc, char** argv)
         LoggingClient loggingClient;
 
         if (argv[1]){
-          //std::cout << argv[1] << '\n';
           std::string file = argv[1];
           std::string line;
           std::ifstream myfile (file);
@@ -54,7 +53,6 @@ int main (int argc, char** argv)
             if (me.message == "exit()"){
               break;
             }
-            //std::cout << me.id << " : " << me.name << std::endl;
           }
         }
 

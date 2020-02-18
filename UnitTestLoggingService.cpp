@@ -101,12 +101,18 @@ TEST_CASE( "6: Testing Log::setLog()", "[multi-file:2]" ) {
     REQUIRE( log.getLogLevel() == 1 );
     REQUIRE( log.getMessage() == "South" );
 }
-/*
-TEST_CASE( "7: Testing LoggingService::dumpLogs()", "[multi-file:2]" ) {
 
-}
-*/
+TEST_CASE( "7: Testing LoggingService::clearLogs()", "[multi-file:2]" ) {
+  LoggingService loggingService;
+  Log logs [2];
+  logs[0].setLog("Patrick", 0, "0");
+  logs[1].setLog("Patrick", 1, "1");
 
-TEST_CASE( "2: Unit Test compiling", "[multi-file:2]" ) {
-    REQUIRE( 2 == 2 );
+  loggingService.clearLogs(logs, 0, 2);
+  REQUIRE( logs[0].getClientId() == "" );
+  REQUIRE( logs[1].getClientId() == "" );
+  REQUIRE( logs[0].getLogLevel() == -1 );
+  REQUIRE( logs[1].getLogLevel() == -1 );
+  REQUIRE( logs[0].getMessage() == "" );
+  REQUIRE( logs[1].getMessage() == "" );
 }
