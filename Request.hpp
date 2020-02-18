@@ -2,10 +2,10 @@
 
 #define MAX_SIZE 1000
 
-class info
+class Request
 {
     public:
-        info (unsigned int x = 0, std::string i = std::to_string(getpid()), int l = -1, std::string n = "")
+        Request (unsigned int x = 0, std::string i = std::to_string(getpid()), int l = -1, std::string n = "")
             : action(x), clientId(i), logLevel(l), message(n)
         {};
 

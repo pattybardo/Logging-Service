@@ -5,7 +5,7 @@
 #include <boost/interprocess/ipc/message_queue.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
-#include "info.hpp"
+#include "Request.hpp"
 #include "Log.hpp"
 
 #define BUFFER_SIZE 5
@@ -14,9 +14,9 @@ using namespace boost::interprocess;
 
 
 // TODO: Unit test
-info receiveMessage(message_queue * mq)
+Request receiveMessage(message_queue * mq)
 {
-    info me;
+    Request me;
     message_queue::size_type recvd_size;
     unsigned int priority;
 
@@ -73,7 +73,7 @@ int main ()
 
         while (true){
 
-            info me = receiveMessage(&mq);
+            Request me = receiveMessage(&mq);
 
             // Dev command for closing the service
             if (me.message == "exit()")

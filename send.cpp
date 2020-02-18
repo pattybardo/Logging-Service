@@ -7,13 +7,13 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/lexical_cast.hpp>
 
-#include "info.hpp"
+#include "Request.hpp"
 
 using namespace boost::interprocess;
 
 
 // TODO: Unit test
-info logInfo() {
+Request logRequest() {
 
   unsigned int action = 0;
   std::string clientId;
@@ -29,14 +29,14 @@ info logInfo() {
   std::cout << "Message: " << '\n';
   getline(std::cin, message);
 
-  info rInfo(action, clientId, boost::lexical_cast<int>(logLevel), message);
+  Request rRequest(action, clientId, boost::lexical_cast<int>(logLevel), message);
 
-  return rInfo;
+  return rRequest;
 
 }
 
 // TODO: Unit test
-info logTextInfo(std::ifstream & myfile) {
+Request logTextRequest(std::ifstream & myfile) {
 
   unsigned int action = 0;
   std::string clientId;
@@ -47,14 +47,14 @@ info logTextInfo(std::ifstream & myfile) {
   getline(myfile, logLevel);
   getline(myfile, message);
 
-  info rInfo(action, clientId, boost::lexical_cast<int>(logLevel), message);
+  Request rRequest(action, clientId, boost::lexical_cast<int>(logLevel), message);
 
-  return rInfo;
+  return rRequest;
 
 }
 
 // TODO: Unit test
-info dumpInfo() {
+Request dumpRequest() {
   unsigned int action = 1;
   std::string clientId;
   //string becuase getLine does not accept integers, cast back later
@@ -66,13 +66,13 @@ info dumpInfo() {
   std::cout << "Select the minimum dump level (0,1,2 - info, warning, error): " << '\n';
   getline(std::cin, dumpLevel);
 
-  info rInfo(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
+  Request rRequest(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
 
-  return rInfo;
+  return rRequest;
 
 }
 
-info dumpTextInfo(std::ifstream & myfile) {
+Request dumpTextRequest(std::ifstream & myfile) {
   unsigned int action = 1;
   std::string clientId;
   std::string dumpLevel;
@@ -81,26 +81,26 @@ info dumpTextInfo(std::ifstream & myfile) {
   getline(myfile, dumpLevel);
 
   std::cout << dumpLevel << '\n';
-  info rInfo(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
+  Request rRequest(action, clientId, boost::lexical_cast<int>(dumpLevel), message);
 
-  return rInfo;
+  return rRequest;
 
 }
 
 // TODO: Unit test
-info cleanInfo() {
+Request cleanRequest() {
   unsigned int action = 2;
   std::string clientId;
   int logLevel;
   std::string message;
 
-  info rInfo(action, clientId, logLevel, message);
+  Request rRequest(action, clientId, logLevel, message);
 
-  return rInfo;
+  return rRequest;
 }
 
 // TODO: Unit test
-info receiveInfo(){
+Request receiveRequest(){
 
   std::string request;
   std::cout << "Choose 0, 1, 2 (log, dump, clean) \n";
@@ -110,31 +110,31 @@ info receiveInfo(){
 
   // TODO: maybe do something about this
   if (x == 0){
-    return logInfo();
+    return logRequest();
   } else if (x == 1){
-    return dumpInfo();
+    return dumpRequest();
   } else {
-    return cleanInfo();
+    return cleanRequest();
   }
 
 
 }
 
-info receiveTextInfo(std::ifstream & myfile, std::string line)
+Request receiveTextRequest(std::ifstream & myfile, std::string line)
 {
   unsigned int action = boost::lexical_cast<int>(line);
   if (action == 0){
-    return logTextInfo(myfile);
+    return logTextRequest(myfile);
   } else if (action == 1){
-    return dumpTextInfo(myfile);
+    return dumpTextRequest(myfile);
   } else {
-    return cleanInfo();
+    return cleanRequest();
   }
 }
 
 
 // TODO: Unit test
-void sendMessage(info me, message_queue * mq)
+void sendMessage(Request me, message_queue * mq)
 {
   std::stringstream oss;
   boost::archive::text_oarchive oa(oss);
@@ -165,8 +165,8 @@ int main (int argc, char** argv)
           if (myfile.is_open())
           {
             while (getline (myfile,line)){
-              // Run the reception of info, and then sending the message
-              info me = receiveTextInfo(myfile, line);
+              // Run the reception of Request, and then sending the message
+              Request me = receiveTextRequest(myfile, line);
 
               sendMessage(me, &mq);
 
@@ -179,7 +179,7 @@ int main (int argc, char** argv)
         } else {
           while (true){
 
-            info me = receiveInfo();
+            Request me = receiveRequest();
 
 
             sendMessage(me, &mq);
